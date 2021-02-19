@@ -53,9 +53,8 @@ def organizeColors(leftColumn):
 # no matter what order the user inputs
     for x in range(len(leftColumn)):
         if(x <= 7):
-            if(leftColumn.index(sortRef[x])):
-                print("found " + str(leftColumn[x]) + "  " + "  " + str(sortRef[x]) + "    "
-                + str(leftColumn.index(sortRef[x])) + str(x))
+            if(leftColumn.index(sortRef[x]) + 1):
+                print("found " + str(leftColumn[x]))
             else:
                 print("could not find " + str(leftColumn[x]))
         else:
