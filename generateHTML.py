@@ -1,3 +1,4 @@
+from os import read
 import random
 
 # get file path for file that needs
@@ -6,67 +7,59 @@ def getPath():
     return input("Input Path. Make sure file has underscores where you would like spaces.\
     e.g: TITLE RaNDoM_LetTErS\n")
 
-# read the file and read all of
+# read the file and get all of
 # the lines
 def readFile(path):
-    fileFinal = ""
     fileRead = open(path)
-    filePrint = fileRead.readlines()
+    filePrint = fileRead.read().splitlines()
 
 # combine lines into one string
 # to be parsed
-    return fileFinal.join(filePrint)
+    return filePrint
 
 # separate file into objects from 
 # left column and colors / details
-# from the right column
+# from the right colum
 def separateFile(readableFile):
-    splitList = readableFile.split()
     objects = []
     parameters = []
-    i = 0;
 
-# split file into left and right columns
-    for x in splitList:
-        if(i % 2 == 0):
-            objects.append(x)
-        else:
-            parameters.append(x)
-        i+=1
-    
+    for x in range(len(readableFile)):
+        objects.append(readableFile[x].upper().split())
+        parameters.append(objects[x][1])
+        objects[x].remove(objects[x][1])
+        
     return objects, parameters
 
-def organizeColors(leftColumn):
-# expected contents of file
-    sortRef = ["body_background", "cell_background1", "cell_background2", "table_border_color"
-    , "table_border_px", "authors", "title", "letters", "images"]
-
-# turn everything in file lowercase in order
-# to make sure there is no issue with any difference
-# in case
-    for x in range(len(leftColumn)):
-        leftColumn[x] = leftColumn[x].lower()
-
-    print(leftColumn)
-# go through the eight expected attributes and sort them
-# in a certain order so the program can generate the page
-# no matter what order the user inputs
-    for x in range(len(leftColumn)):
-        if(x <= 7):
-            if(leftColumn.index(sortRef[x]) + 1):
-                print("found " + str(leftColumn[x]))
-            else:
-                print("could not find " + str(leftColumn[x]))
+def generateHTML(objects, parameters):
+    
+    for x in objects:
+        if x == ['TITLE']:
+            print("title")
+        elif x == ['AUTHORS']:
+            print("authors")
+        elif x == ['BODY_BACKGROUND']:
+            print("body background")
+        elif x == ['CELL_BACKGROUND1']:
+            print("cell background 1")
+        elif x == ['CELL_BACKGROUND2']:
+            print("cell background 2")
+        elif x == ['TABLE_BORDER_COLOR']:
+            print("table border color")
+        elif x == ['TABLE_BORDER_PX']:
+            print("table border pixels")
+        elif x == ['LETTERS']:
+            print("letters")
         else:
-            print("There are more parameters than can be generated")
-            break
+            print("Unable to find " + str(x))
 
-def getIndex(input):
-    print(input)
+def writeFile():
+    
 
 def main():
     fullFile = readFile(getPath())
     leftColumn, rightColumn = separateFile(fullFile)
-    organizeColors(leftColumn)
+    #print(leftColumn)
+    generateHTML(leftColumn, rightColumn)
 
 main()
