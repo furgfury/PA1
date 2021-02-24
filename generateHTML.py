@@ -12,9 +12,6 @@ def getPath():
 def readFile(path):
     fileRead = open(path)
     filePrint = fileRead.read().splitlines()
-
-# combine lines into one string
-# to be parsed
     return filePrint
 
 # separate file into objects from 
@@ -34,9 +31,8 @@ def separateFile(readableFile):
 
 def generateHTML(objects, parameters):
     sortedObjects = []
-    i = 8
 
-    sortedObjects = fillArray(sortedObjects, objects)
+    sortedObjects = fillArray(sortedObjects)
 
     for x in objects:
         if x == ['TITLE']:
@@ -55,19 +51,18 @@ def generateHTML(objects, parameters):
             sortedObjects[6] = parameters[objects.index(x)]
         elif x == ['LETTERS']:
             sortedObjects[7] = parameters[objects.index(x)]
+        elif x == ['IMAGES']:
+            sortedObjects[7] = ""
         else:
-            sortedObjects[i] = parameters[objects.index(x)]
-            i+=1
+            sortedObjects[8] += (" " + str(objects[objects.index(x)]).lower())
+            sortedObjects[8] += (" " + str(parameters[objects.index(x)]).lower())
+        print(sortedObjects[8])
 
     return sortedObjects
 
-def fillArray(array, length):
-    if(len(length) >= 7):
-        for x in range(len(length)):
-            array.append("")
-    else:
-        for x in range(8):
-            array.append("")
+def fillArray(array):
+    for x in range(9):
+        array.append("")
     return array
 
 def createFile(name):
@@ -79,7 +74,8 @@ def writeFile(file, element):
     file.flush()
 
 def wrap(tag, element):
-    line = str(tag + element + tag[0:1] + "/" + tag[1:len(tag.split(" ", 1))])
+    #TODO check if tag is image bc they don't have closing tag
+    line = str(tag + element + tag[0:1] + "/" + tag[1:len(tag.split(">", 2))] + ">")
     return line
 
 def fillHeader(file, elements):
@@ -91,9 +87,14 @@ def fillHeader(file, elements):
     file.write(headRef)
 
 def fillFile(file, elementList):
-    tagReference = ["<h1>", "<table>", ]
-    #for x in range(len(elementList)):
-    writeFile(file, wrap(tagReference[0], elementList[0]))
+    cleanList = elementList[8].replace("'", " ").split(" ")
+    print(str(cleanList) + "\n\n")
+    i = 0;
+    file = open(file.name, "a")
+    for x in range(int(len(cleanList))):
+        if(i < x):
+            print(cleanList[i])
+            i+=2;
 
 def main():
     fullFile = readFile(getPath())
@@ -102,5 +103,6 @@ def main():
     sortedList = generateHTML(leftColumn, rightColumn)
     #fillHeader(outputFile, sortedList)
     fillFile(outputFile, sortedList)
+    #outputFile.write(wrap("<h6>", "title"))
 
 main()
